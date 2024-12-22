@@ -1,0 +1,17 @@
+PackageIdentifier: com.malawarecreator.neofile  # Change to an appropriate identifier
+PackageVersion: 1.0.0
+DefaultLocale: en-US
+ManifestType: version
+ManifestVersion: 1.4.0
+PackageLocale:
+  en-US:
+    PackageName: neofile
+    Publisher: malawarecreator  # Use your actual name or company name
+    ShortDescription: The old file command reimagined for windows  # Improve description
+    License: GPL-1.0
+Installers:
+  - Architecture: x64
+    InstallerUrl: https://yourwebsite.com/downloads/neofile.exe  # Update the URL
+    InstallerSha256: 87116DD5936C3BE13F9A03AEF9C10C4CC2E0EB797EB01EF6B56249F142E1A985
+    Capabilities:  # If it's portable
+      - Portable
