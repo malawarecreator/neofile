@@ -1,34 +1,44 @@
 use clap::Parser;
-use std::{fs, path::{self, Path}};
+use std::fs;
+use std::io::{Write, self};
+use std::path::Path;
 
-#[derive(clap::Parser)]
+#[derive(Parser)]
 struct Cli {
     pattern: String,
     path: String,
 }
 
 fn main() {
-
     let args = Cli::parse();
-
-    if args.pattern == String::from("identify") {
-        let extension = args.path.split(".").last().unwrap_or("");
-        let mut fullextensionname: &str = "nil";
-        match extension {
-            "rs" => fullextensionname = "Rust source file",
-            "txt" => fullextensionname = "Text file",
-            "cc" => fullextensionname = "C++ source file",
-            &_ => todo!(),
+    let stdout = io::stdout();
+    let handle = stdout.lock();
+    match args.pattern.as_str() {
+        "identify" => {
+            let extension = args.path.split('.').last().unwrap_or("");
+            let fullextensionname = match extension {
+                "rs" => "Rust source file",
+                "txt" => "Text file",
+                "cc" => "C++ source file",
+                _ => "Unknown file type",
+            };
+            
         }
-        println!("file extension identified as '{}'", fullextensionname);
-    } else if args.pattern == String::from("cat") {
-        let message: String = fs::read_to_string(args.path).expect("something messed up");
-        println!("read file contents: {message}");
-    } else if args.pattern == String::from("vf") {
-       
-        println!("is a file");
-    } else {
-        println!("no such command");
+        "cat" => {
+            let message = fs::read_to_string(args.path).expect("Failed to read file");
+            println!("read file contents: {message}");
+        }
+        "vf" => {
+            if Path::new(&args.path).is_file() {
+                println!("is a file");
+            } else {
+                println!("is not a file");
+            }
+        }
+        
+        _ => {
+            println!("no such command");
+        }
     }
 }
 
