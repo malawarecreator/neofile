@@ -1,6 +1,6 @@
 use clap::Parser;
 use std::fs;
-use std::io::{Write, self};
+
 use std::path::Path;
 
 #[derive(Parser)]
