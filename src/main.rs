@@ -11,17 +11,20 @@ struct Cli {
 
 fn main() {
     let args = Cli::parse();
-    let stdout = io::stdout();
-    let handle = stdout.lock();
+    
     match args.pattern.as_str() {
         "identify" => {
             let extension = args.path.split('.').last().unwrap_or("");
+            let extensioncaps = extension.to_uppercase();
             let fullextensionname = match extension {
-                "rs" => "Rust source file",
-                "txt" => "Text file",
-                "cc" => "C++ source file",
-                _ => "Unknown file type",
+                "rs" => String::from("Rust source file"),
+                "txt" => String::from("Text file"),
+                "cc" => String::from("C++ source file"),
+
+                _ => format!("{extensioncaps} file"),
             };
+
+            println!("{fullextensionname}");
             
         }
         "cat" => {
@@ -35,7 +38,6 @@ fn main() {
                 println!("is not a file");
             }
         }
-        
         _ => {
             println!("no such command");
         }
