@@ -50,14 +50,12 @@ async fn main() {
         }
 
         "apnd" => {
-            let mut file: String = String::new();
+            
             let mut in_data: String = String::new();
-            println!("enter the name of the file");
-            std::io::stdin().read_to_string(&mut file).unwrap();
             println!("enter the data needed to be appended");
-            std::io::stdin().read_to_string(&mut in_data).unwrap();
-            println!("writing to file {}", file);
-            append_file(in_data, file, args).await;
+            std::io::stdin().read_line(&mut in_data).unwrap();
+            println!("writing to file {}", args.path);
+            append_file(in_data, args.path).await;
             
         }
         _ => {
@@ -85,7 +83,7 @@ async fn write_to_file() {
     writeln!(handle, "read {} bytes total", br).unwrap();
     writeln!(handle, "writing to file {}", file).unwrap();
   
-    let mut file_handle = match File::create(file.trim()) {
+    let file_handle = match File::create(file.trim()) {
         Ok(file_handle) => file_handle,
         Err(err) => {
             eprintln!("Error creating file: {}", err);
@@ -96,16 +94,16 @@ async fn write_to_file() {
     
 
 }
-async fn append_file(append_data: String, file: String, args: Cli) {
-    let message = fs::read_to_string(args.path).expect("Failed to read file");
-    let mut file_handle = match File::create(file.trim()) {
+async fn append_file(append_data: String, file: String) {
+    let message = fs::read_to_string(&file).expect("Failed to read file");
+    let file_handle = match File::create(file.trim()) {
         Ok(file_handle) => file_handle,
         Err(err) => {
             eprintln!("{}", err);
             return;
         }
     };
-    let final_message: String = [append_data, message].concat();
+    let final_message: String = [message, append_data].concat();
     write_to_handle(file_handle, final_message.as_bytes()).await;
     println!("final message: {}", final_message);
 }
