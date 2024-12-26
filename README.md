@@ -13,4 +13,9 @@ write to file: <br>
 verify file:<br>
 `neofile vf my_file.txt`<br>
 append to file:<br>
-`neofile apnd my_file.txt`<br>
+`neofile apnd my_file.txt` use the `--no-newline` flag to use no newline when appending<br>
+
+
+
+changelist:<br>
+added new flag to apnd command<br>

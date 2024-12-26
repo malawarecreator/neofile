@@ -11,6 +11,9 @@ use std::time::Duration;
 struct Cli {
     pattern: String,
     path: String,
+
+    #[clap(long = "no-newline", required=false)]
+    no_newline: bool,
 }
 
 #[tokio::main]
@@ -55,7 +58,7 @@ async fn main() {
             println!("enter the data needed to be appended");
             std::io::stdin().read_line(&mut in_data).unwrap();
             println!("writing to file {}", args.path);
-            append_file(in_data, args.path).await;
+            append_file(in_data, args.path, args.no_newline).await;
             
         }
         _ => {
@@ -94,16 +97,16 @@ async fn write_to_file() {
     
 
 }
-async fn append_file(append_data: String, file: String) {
-    let message = fs::read_to_string(&file).expect("Failed to read file");
-    let file_handle = match File::create(file.trim()) {
-        Ok(file_handle) => file_handle,
-        Err(err) => {
-            eprintln!("{}", err);
-            return;
-        }
-    };
-    let final_message: String = [message, append_data].concat();
-    write_to_handle(file_handle, final_message.as_bytes()).await;
-    println!("final message: {}", final_message);
+async fn append_file(data: String, path: String, no_newline: bool) {
+    let mut file = fs::OpenOptions::new()
+        .write(true)
+        .append(true)
+        .open(path)
+        .expect("Failed to open file");
+    if no_newline {
+        file.write_all(data.as_bytes()).expect("Failed to append to file");
+    } else {
+        file.write_all(format!("{}\n", data).as_bytes()).expect("Failed to append to file");
+    }
+    println!("Data appended successfully");
 }
