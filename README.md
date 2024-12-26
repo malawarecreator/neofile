@@ -12,3 +12,5 @@ write to file: <br>
 `neofile write _`<br>
 verify file:<br>
 `neofile vf my_file.txt`<br>
+append to file:<br>
+`neofile apnd my_file.txt`<br>
