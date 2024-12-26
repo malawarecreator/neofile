@@ -25,7 +25,8 @@ async fn main() {
                 "rs" => String::from("Rust source file"),
                 "txt" => String::from("Text file"),
                 "cc" => String::from("C++ source file"),
-
+                "c++" => String::from("C++ source file"),
+                "java" => String::from("Java Source file"),
                 _ => format!("{extensioncaps} file"),
             };
 
@@ -38,6 +39,7 @@ async fn main() {
         }
         "write" => {
             write_to_file().await;
+            
         }
         "vf" => {
             if Path::new(&args.path).is_file() {
@@ -46,9 +48,22 @@ async fn main() {
                 println!("is not a file");
             }
         }
+
+        "apnd" => {
+            let mut file: String = String::new();
+            let mut in_data: String = String::new();
+            println!("enter the name of the file");
+            std::io::stdin().read_to_string(&mut file).unwrap();
+            println!("enter the data needed to be appended");
+            std::io::stdin().read_to_string(&mut in_data).unwrap();
+            println!("writing to file {}", file);
+            append_file(in_data, file, args).await;
+            
+        }
         _ => {
             println!("no such command");
         }
+
     }
 }
 async fn write_to_handle(mut handle: File, databuf: &[u8]) {
@@ -78,7 +93,19 @@ async fn write_to_file() {
         }
     };
     write_to_handle(file_handle, input_data.as_bytes()).await;
-
+    
 
 }
-
+async fn append_file(append_data: String, file: String, args: Cli) {
+    let message = fs::read_to_string(args.path).expect("Failed to read file");
+    let mut file_handle = match File::create(file.trim()) {
+        Ok(file_handle) => file_handle,
+        Err(err) => {
+            eprintln!("{}", err);
+            return;
+        }
+    };
+    let final_message: String = [append_data, message].concat();
+    write_to_handle(file_handle, final_message.as_bytes()).await;
+    println!("final message: {}", final_message);
+}
