@@ -14,6 +14,10 @@ struct Cli {
 
     #[clap(long = "no-newline", required=false)]
     no_newline: bool,
+    #[clap(long = "show-bytes", required=false)]
+    show_bytes: bool,
+    #[clap(long = "dest", required=false)]
+    dest: Option<String>,
 }
 
 #[tokio::main]
@@ -60,6 +64,13 @@ async fn main() {
             println!("writing to file {}", args.path);
             append_file(in_data, args.path, args.no_newline).await;
             
+        }
+        "cp" => {
+            if let Some(dest) = &args.dest {
+                copy_file(args.path.clone(), dest.clone(), args.show_bytes).await;
+            } else {
+                println!("Error: --dest parameter is required for the cp command");
+            }
         }
         _ => {
             println!("no such command");
@@ -109,4 +120,17 @@ async fn append_file(data: String, path: String, no_newline: bool) {
         file.write_all(format!("{}\n", data).as_bytes()).expect("Failed to append to file");
     }
     println!("Data appended successfully");
+}
+async fn copy_file(src: String, dest: String, show_bytes: bool) {
+    let mut src_file = fs::File::open(src).expect("Failed to open source file");
+    let dest_file = fs::File::create(dest).expect("Failed to create destination file");
+    
+    let mut bytes_read = 0;
+
+    let mut src_data = String::new();
+    bytes_read += src_file.read_to_string(&mut src_data).expect("Failed to read source file");
+    write_to_handle(dest_file, src_data.as_bytes()).await;
+    if show_bytes {
+        println!("Copied {} bytes", bytes_read);
+    }
 }
