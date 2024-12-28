@@ -72,6 +72,13 @@ async fn main() {
                 println!("Error: --dest parameter is required for the cp command");
             }
         }
+        "move" => {
+            if let Some(dest) = &args.dest {
+                movef(args.path.clone(), dest.clone()).await;
+            } else {
+                println!("Error: --dest parameter is required for the move command");
+            }
+        }
         _ => {
             println!("no such command");
         }
@@ -133,4 +140,12 @@ async fn copy_file(src: String, dest: String, show_bytes: bool) {
     if show_bytes {
         println!("Copied {} bytes", bytes_read);
     }
+}
+
+async fn movef(srcpath: String, dest_dir: String) {
+    let mut src_file = fs::File::open(&srcpath).expect("no such file");
+    let mut final_destpath = format!("{}/{}", dest_dir, srcpath);
+    let dest_file = fs::File::create(format!("{}/{}", dest_dir, srcpath));
+    copy_file(srcpath, final_destpath, true).await;
+    
 }

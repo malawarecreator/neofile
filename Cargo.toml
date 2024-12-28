@@ -1,6 +1,6 @@
 [package]
 name = "neofile"
-version = "0.1.4"
+version = "0.1.5"
 edition = "2021"
 description = "linux file command for windows. PATCH 4."
 license = "GPL-3.0"
