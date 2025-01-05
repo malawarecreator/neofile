@@ -1,8 +1,8 @@
 [package]
 name = "neofile"
-version = "0.1.5"
+version = "0.1.6"
 edition = "2021"
-description = "linux file command for windows. PATCH 4."
+description = "linux file command for windows. PATCH 6."
 license = "GPL-3.0"
 [dependencies]
 clap = { version = "4.5.23", features = ["derive"] }
