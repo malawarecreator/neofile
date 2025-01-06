@@ -77,11 +77,11 @@ async fn main() {
         }
     }
 }
-
+// one reusable function
 async fn write_to_handle(mut handle: File, databuf: &[u8]) {
     handle.write_all(databuf).unwrap();
 }
-
+// write to the file (uses above function)
 async fn write_to_file() {
     let mut br: i32 = 0;
     let stdout = std::io::stdout();
@@ -120,7 +120,7 @@ async fn append_file(data: String, path: String, no_newline: bool) {
     }
     println!("Data appended successfully");
 }
-
+// copies file
 async fn copy_file(src: String, dest: String, show_bytes: bool) {
     let mut src_file = fs::File::open(src).expect("Failed to open source file");
     let dest_file = fs::File::create(dest).expect("Failed to create destination file");
@@ -134,7 +134,7 @@ async fn copy_file(src: String, dest: String, show_bytes: bool) {
         println!("Copied {} bytes", bytes_read);
     }
 }
-
+// moves file (basically copy file)
 async fn movef(srcpath: String, dest_dir: String) {
     let final_destpath = format!("{}/{}", dest_dir, srcpath);
     copy_file(srcpath, final_destpath, true).await;
