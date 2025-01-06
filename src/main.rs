@@ -4,12 +4,12 @@ use std::io::Write;
 use std::fs;
 use std::path::Path;
 use std::io::prelude::*;
-
+// args struct
 #[derive(Parser)]
 struct Cli {
     pattern: String,
     path: String,
-
+    
     #[clap(long = "no-newline", required = false)]
     no_newline: bool,
     #[clap(long = "show-bytes", required = false)]
@@ -17,7 +17,7 @@ struct Cli {
     #[clap(long = "dest", required = false)]
     dest: Option<String>,
 }
-
+//main (async doesnt do anything it just makes it look cool)
 #[tokio::main]
 async fn main() {
     let args = Cli::parse();
